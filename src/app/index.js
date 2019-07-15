@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import "../scss/main.scss";
 import classNames from "classnames";
 import { shuffleArray } from "./utils"
-import { apiUrl } from "./constants";
-
+import { apiUrl, optionsToShow, featuresToShow } from "./constants";
+ 
 
 
 class App extends Component {
@@ -18,10 +18,12 @@ class App extends Component {
             remainingCharacters: [],
             //opções de personagens que serão mostradas na tela
             options: [],
+            //quants opções se deve mostrar
+            optionsToShow,
             //caracteristicas que serão apresentadas
             currentFeatures: [],
             //define quantas características devem aparecer
-            featuresToShow: 4,
+            featuresToShow,
             //pontuação
             points: 0,
             //a escolha do jogador
@@ -99,12 +101,11 @@ class App extends Component {
    // Escolhe outros personagens para entrar na pergunta
    setOptions(){
        const options = [];
-       const {allCharacters, currentCharacter} = this.state;
-       const numberOptions = 4;
+       const {allCharacters, currentCharacter, optionsToShow} = this.state;
        const randomUniverse = shuffleArray(allCharacters);
        options.push(currentCharacter);
        randomUniverse.forEach((randomCharacter) => {
-           if(randomCharacter !== currentCharacter && options.length < numberOptions){
+           if(randomCharacter !== currentCharacter && options.length < optionsToShow){
             options.push(randomCharacter);
            }
        });
