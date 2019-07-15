@@ -14,7 +14,7 @@ body{
 //container do jogo
 .game-container{
     width: 100%;
-    padding: 0 16px;
+    padding: 0 $base-number;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -23,7 +23,6 @@ body{
 
 //título do jogo
 .game-title{
-    text-align: center;
     color: $white;
     @extend %font-family-notable;
     letter-spacing: 1em;
@@ -44,7 +43,7 @@ Utilitários
 
 //valores de margem
 .mb-2{
-    margin-bottom: 32px;
+    margin-bottom: $base-number*2;
 }
 
 //texto
@@ -56,4 +55,25 @@ Utilitários
 
 .color-3{
     color: $color-3;
+}
+
+/*
+
+Elementos HTML
+
+*/
+
+button{
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    &:disabled{
+        pointer-events: none;
+        //color: inherit;
+        // opacity: 0.5;
+    }
+}
+ul{
+    list-style: none;
 }

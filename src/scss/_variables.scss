@@ -4,6 +4,7 @@ Variáveis e placeholders
 
 */
 
+// Cores
 $color-1 : #f6da22;
 $color-2:  #3ab9aa;
 $color-3: #1f154f;
@@ -11,6 +12,9 @@ $color-4: #ff0026;
 $color-5: #ebd5ad;
 $black: #000;
 $white: #fff;
+$gray:  #ccc;
+
+// Famílias
 
 %font-family-bangers{
     font-family: 'Bangers', cursive;
@@ -22,3 +26,8 @@ $white: #fff;
 %font-family-notable{
     font-family: 'Notable', sans-serif;
 }
+
+
+// Espaçamentos
+
+$base-number: 16px;

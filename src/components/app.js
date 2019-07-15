@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../main.scss";
+import "../scss/main.scss";
 import classNames from "classnames";
 
 
@@ -191,7 +191,7 @@ class App extends Component {
         
         return (
            <div className="game-container">
-               <h1 className="game-title">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
+               <h1 className="game-title text-center">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
                 <div>
                     {!this.state.allCharacters.length ?
                         <h2 className="text-center">Loading characters...</h2> : 
@@ -256,7 +256,7 @@ class App extends Component {
                             "button--right": this.state.nextStep && (this.state.currentCharacter.name == option.name),
                             "button--wrong": this.state.nextStep && this.state.playerChoice == key && !this.state.playerIsCorrect
                         })}                    
-                        onClick={(event)=>(this.getAnswer(event))} key={key} value={option.name} data-number={key}>{option.name}</button>
+                        onClick={(event)=>(this.getAnswer(event))} key={key} value={option.name} data-number={key} disabled={this.state.nextStep}>{option.name}</button>
                     })}
                     </div>
                     {this.state.remainingCharacters.length !=0 && this.state.startGame &&

@@ -31,7 +31,7 @@ Carta
     transform: rotateY(180deg);
 }
 %background-card{
-    background: $black url("./img/card-pattern.png") no-repeat center;
+    background: $black url("../img/card-pattern.png") no-repeat center;
 }
 
 
@@ -40,15 +40,15 @@ Carta
     height: 480px;
     width: 100%;
     margin: auto;
-    margin-bottom: 32px;
-    border-radius: 16px;
+    margin-bottom: $base-number*2;
+    border-radius: $base-number;
     overflow: hidden;
 }
 
 .card-inner{
     @extend %flip-element-inner;
     background: $white;
-    border-radius: 16px;
+    border-radius: $base-number;
 }
 .card-inner--show-back {
     @extend %flip-element-turner;
@@ -58,7 +58,7 @@ Carta
     @extend %flip-element-side;
 }
 .card-front{
-    margin: 16px;
+    margin: $base-number;
 }
 .card-back{
     @extend %flip-element-backside;
@@ -68,17 +68,17 @@ Carta
 .card__content{
     @extend %absolute-full;
     @extend %flex-column-center;
-    padding: 16px;
     @extend %background-card;
+    padding: $base-number;
 }
 
 
 //área de imagem da carta
 
 .card__image{
-    width: 160px;
-    flex: 0 1 160px; 
-    margin: 0 auto 16px auto;
+    width: $base-number*10;
+    flex: 0 1 $base-number*10; 
+    margin: 0 auto $base-number auto;
     position: relative;
     overflow: hidden;
 }
@@ -95,7 +95,7 @@ Carta
     border-radius: 50%; 
 }
 .card__image-front{
-    background: $black url('./img/death-star.svg') no-repeat center center;
+    background: $black url('../img/death-star.svg') no-repeat center center;
     background-size: 150px; 
 }
 .card__image-back{
@@ -105,7 +105,7 @@ Carta
 // Apresentação de personagem com sprite na área de imagem da carta
 
 .card-ch{
-    background: url('./img/sw-sprite.jpg') no-repeat;
+    background: url('../img/sw-sprite.jpg') no-repeat;
 }
 
 .card-ch--luke-skywalker{
@@ -142,19 +142,17 @@ Carta
 // container de características do personagem
 .card__features-container{
     @extend %flex-column-center;
-    border-radius: 16px;
+    border-radius: $base-number;
     margin: 0;
-    padding: 16px;
-    list-style-position: inside;
+    padding: $base-number;
     flex: auto;
     background: rgba($white, .8);
-    list-style: none;
 }
 // elemento de caracteristica
 .card__feature-element{
     @extend %font-family-bangers;
     border: dashed 1px $color-3;
-    padding: 8px;
+    padding: $base-number/2;
     background: rgba($color-5, .2);
     text-transform: uppercase;
     font-weight: bold;
