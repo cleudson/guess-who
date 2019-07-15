@@ -3,6 +3,7 @@ import "../scss/main.scss";
 import classNames from "classnames";
 import { shuffleArray } from "./utils"
 import { apiUrl, optionsToShow, featuresToShow } from "./constants";
+import Feature from "./components/feature";
  
 
 
@@ -212,7 +213,8 @@ class App extends Component {
                                     </div>
                                     <ul className="card__features-container">
                                         {this.state.currentFeatures.map((feature, key) =>{
-                                            return <li className="card__feature-element" key={key}>{feature.name}: {feature.value}</li>
+                                            // return <li className="card__feature-element" key={key}>{feature.name}: {feature.value}</li>
+                                            return <Feature key={key} name={feature.name} value={feature.value}/>
                                         })}
                                     </ul>
                                 </div>
