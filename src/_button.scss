@@ -1,0 +1,87 @@
+/*
+
+Botões
+
+*/
+
+.button-container{
+    display: flex;
+    justify-content: center;
+ }
+.button{
+    background-color: $color-4;
+    margin: 0 8px;
+    border: none;
+    padding: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    @extend %font-family-bangers;
+    position: relative;
+    z-index: 0;
+    flex: 1;
+    transform: center;
+    cursor: pointer;
+    transition: transform .25s ease-out;
+    &::before, &::after{
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        height: 100%;
+        transition: background-color .25s .15s linear;
+    }
+    &::before{
+        background: $color-1;
+        z-index: -1;
+        transform: translateX(-8px) skewX(15deg);
+        width: calc(100% + 16px);
+    }
+    &::after{
+        border: solid 1px $color-2;
+        transform: translate(0px, -4px) skewX(15deg);
+        width: 100%;
+    }
+
+    &:hover{
+        transform: scale(1.05);
+        z-index: 1;
+        &::before{
+            background-color: $color-5;
+            transform: translateX(-8px) skewX(15deg);
+        }
+    }
+}
+//botao desabilitado
+.button--disabled{
+    pointer-events: none;
+    
+    &::before{
+        transition-delay: 1s;
+        background-color: #ccc;
+    }
+}
+// botao com resposta errada
+.button--wrong::before{
+    background-color: $color-4; 
+}
+//botao com resposta certa
+.button--right{
+    z-index: 1;
+    transform: scale(1.1);
+    &::before{
+        background-color: $color-1;
+    }
+}
+//botao proximo
+.button--next{
+    @extend %font-family-opensans;
+    &::before{
+        background-color: $color-2; 
+    }
+    &::after{
+        border-color: $color-1; 
+    }
+}
+//botao com largura normal
+.button--auto{
+    flex: none;
+}

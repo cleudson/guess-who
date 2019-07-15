@@ -1,0 +1,165 @@
+
+/*
+
+Carta
+
+*/
+%absolute-full{
+    position: absolute;
+    top:0; right:0; bottom:0 ; left: 0;
+}
+%flex-column-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+%flip-element-inner{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 1s 0s;
+    transform-style: preserve-3d;
+}
+%flip-element-side{
+    @extend %absolute-full;
+    backface-visibility: hidden;
+}
+%flip-element-backside{
+    transform: rotateY(180deg);
+}
+%flip-element-turner{
+    transform: rotateY(180deg);
+}
+%background-card{
+    background: $black url("./img/card-pattern.png") no-repeat center;
+}
+
+
+.card{
+    max-width: 320px;
+    height: 480px;
+    width: 100%;
+    margin: auto;
+    margin-bottom: 32px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.card-inner{
+    @extend %flip-element-inner;
+    background: $white;
+    border-radius: 16px;
+}
+.card-inner--show-back {
+    @extend %flip-element-turner;
+    transition-delay: .5s;
+  }
+.card-front, .card-back{
+    @extend %flip-element-side;
+}
+.card-front{
+    margin: 16px;
+}
+.card-back{
+    @extend %flip-element-backside;
+    @extend %background-card;
+}
+
+.card__content{
+    @extend %absolute-full;
+    @extend %flex-column-center;
+    padding: 16px;
+    @extend %background-card;
+}
+
+
+//área de imagem da carta
+
+.card__image{
+    width: 160px;
+    flex: 0 1 160px; 
+    margin: 0 auto 16px auto;
+    position: relative;
+    overflow: hidden;
+}
+.card__image-inner {
+    @extend %flip-element-inner;
+}
+.card__image-inner--show-back {
+    @extend %flip-element-turner;
+    transition-delay: .5s;
+  }
+.card__image-front, .card__image-back{
+    @extend %flip-element-side;
+    border: solid 2px $color-1;
+    border-radius: 50%; 
+}
+.card__image-front{
+    background: $black url('./img/death-star.svg') no-repeat center center;
+    background-size: 150px; 
+}
+.card__image-back{
+    @extend %flip-element-backside;
+}
+
+// Apresentação de personagem com sprite na área de imagem da carta
+
+.card-ch{
+    background: url('./img/sw-sprite.jpg') no-repeat;
+}
+
+.card-ch--luke-skywalker{
+    background-position: -320px -160px;
+}
+.card-ch--biggs-darklighter{
+    background-position: -320px 0;
+}
+.card-ch--c-3po{
+    background-position: -160px -160px;
+}
+.card-ch--darth-vader{
+    background-position: -480px 0;
+}
+.card-ch--beru-whitesun-lars{
+    background-position: 0 -320px;
+}
+.card-ch--leia-organa{
+    background-position: -160px 0;
+}
+.card-ch--owen-lars{
+    background-position: -480px -160px;
+}
+.card-ch--r5-d4{
+    background-position: -640px 0;
+}
+.card-ch--r2-d2{
+    background-position: -640px -160px;
+}
+.card-ch--obi-wan-kenobi{
+    background-position: 0 -160px;
+}
+
+// container de características do personagem
+.card__features-container{
+    @extend %flex-column-center;
+    border-radius: 16px;
+    margin: 0;
+    padding: 16px;
+    list-style-position: inside;
+    flex: auto;
+    background: rgba($white, .8);
+    list-style: none;
+}
+// elemento de caracteristica
+.card__feature-element{
+    @extend %font-family-bangers;
+    border: dashed 1px $color-3;
+    padding: 8px;
+    background: rgba($color-5, .2);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: $color-3;
+    & + &{
+        margin-top: 4px;
+    }
+}

@@ -1,0 +1,283 @@
+import React, { Component } from "react";
+import "../main.scss";
+import classNames from "classnames";
+
+
+
+class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            // grupo de personagens
+            allCharacters: [],
+            //personagem atual
+            currentCharacter: {},
+            //personagens que restam a serem advinhados
+            remainingCharacters: [],
+            //opções de personagens que serão mostradas na tela
+            options: [],
+            //caracteristicas que serão apresentadas
+            currentFeatures: [],
+            //pontuação
+            points: 0,
+            //a escolha do jogador
+            playerChoice: null,
+            //se o jogador acertou a resposta
+            playerIsCorrect: false,
+            //verifica se o usuário acertou a resposta
+            nextStep: false,
+            //libera fim do jogo
+            endGame: false,
+            //libera o início do jogo
+            startGame: false
+            
+        }
+        this.setCharacter = this.setCharacter.bind(this);
+        this.setOptions = this.setOptions.bind(this);
+        this.getAnswer = this.getAnswer.bind(this);
+        this.goToNextStep = this.goToNextStep.bind(this);
+        this.goToScore = this.goToScore.bind(this);
+        this.shuffleArray = this.shuffleArray.bind(this)
+    }
+
+    //Escolhe um personagem para ser advinhado
+   setCharacter(){
+       // captura os personagens restantes
+        const {remainingCharacters} = this.state;
+        const featuresToShow = 4;
+        let charIndex;
+        // gera um número aleatório para para escolher novo personagem
+        do {
+            charIndex = remainingCharacters.length !== 1 ? Math.round(Math.random() * remainingCharacters.length) : 0;
+        } while (remainingCharacters[charIndex] == undefined);
+        // Escolhe o novo personagem
+        const currentCharacter = remainingCharacters[charIndex];
+        // Gera as características que podem aparecer para o jogador
+        const features = [
+            {
+                name:"Birth Year",
+                value: currentCharacter.birth_year
+            },
+            {
+                name:"Eye Color",
+                value: currentCharacter.eye_color
+            },
+            {
+                name: "Gender",
+                value: currentCharacter.gender
+            },
+            {
+                name: "Hair Color",
+                value: currentCharacter.hair_color
+            },
+            {
+                name: "Height",
+                value: currentCharacter.height
+            },
+            {
+                name: "Mass",
+                value: currentCharacter.mass
+            }
+            
+        ];
+        // filtra as características
+        const filteredFeatures = features.filter((feature) => {
+            return feature.value !== "none" && feature.value !== "n/a";
+        });
+        //muda a ordem das caracteristicas filtradas e retorna o número necessário
+        const shownFilters = this.shuffleArray(filteredFeatures).slice(0, featuresToShow);
+        
+        //retira o personagem selecionado dos personagens restantes
+        const newRemainingCharacters = this.state.remainingCharacters.filter((value, index) => index != charIndex );
+        
+        this.setState({
+            currentCharacter,
+            currentFeatures: shownFilters 
+        },() => {
+            this.setOptions();
+            this.setState({
+                remainingCharacters: newRemainingCharacters
+            })
+        })
+   }
+   // Escolhe outros personagens para entrar na pergunta
+   setOptions(){
+       const options = [];
+       const {allCharacters, currentCharacter} = this.state;
+       const numberOptions = 4;
+
+       const randomUniverse = this.shuffleArray(allCharacters);
+
+       options.push(currentCharacter);
+       randomUniverse.forEach((randomCharacter) => {
+           if(randomCharacter !== currentCharacter && options.length < numberOptions){
+            options.push(randomCharacter);
+           }
+       });
+       const randomOptions = this.shuffleArray(options);
+       this.setState({
+           options: randomOptions
+       })
+   }
+   // Respondendo a pergunta
+   getAnswer(event){
+        const {value} = event.target;
+        const optionNumber = event.target.dataset.number;
+        
+        this.setState({
+            playerChoice: optionNumber
+        })
+        if(value === this.state.currentCharacter.name){
+            this.setState({
+                points: this.state.points + 1,
+                playerIsCorrect: true
+            })
+        }
+        this.setState({
+            nextStep: true
+        })
+   }
+   //Inicializando  o jogo
+   startGame(){
+       this.setState({
+            startGame: true,
+            currentFeatures: [],
+            points: 0,
+            playerChoice: null,
+            playerIsCorrect: false,
+            nextStep: false,
+            endGame: false,
+       })
+       this.setCharacter();
+   }
+
+   //Ir para o próximo round
+   goToNextStep(){
+       if(this.state.remainingCharacters.length > 0){
+        this.setCharacter();
+       }
+       this.setState({
+        nextStep: false,
+        playerChoice: null,
+        playerIsCorrect: false
+        })
+   }
+   // Finaliza o jogo
+   goToScore(){
+    this.setState({
+        endGame: true
+    })
+   }
+   shuffleArray(arr){
+    return arr.sort(() => Math.random() - 0.5);
+   }
+
+    componentDidMount() {
+        // obtenção de dadosatravés da api
+        fetch("https://swapi.co/api/people/?format=json", {
+            headers: {
+                Accept: "application/json"
+            }
+            }).then(response => response.json())
+            .then(data => {
+            this.setState({
+                allCharacters: data.results,
+                remainingCharacters: data.results
+            })
+        });
+       
+    }
+    render() {
+        
+        return (
+           <div className="game-container">
+               <h1 className="game-title">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
+                <div>
+                    {!this.state.allCharacters.length ?
+                        <h2 className="text-center">Loading characters...</h2> : 
+                        <h2 className="text-center">Round: {this.state.allCharacters.length - this.state.remainingCharacters.length}/{this.state.allCharacters.length}</h2>
+                    }
+                    <div className="card">
+                        <div className={classNames({
+                            "card-inner" : true,
+                            "card-inner--show-back" : !this.state.startGame || this.state.endGame
+                            })}>
+                            <div className="card-front">
+                                <div className="card__content">
+                                    <div className="card__image">
+                                        <div className={classNames({
+                                            "card__image-inner" : true,
+                                            "card__image-inner--show-back" : this.state.nextStep
+                                            })}>
+                                            <div className="card__image-front">
+                                            </div>
+                                            <div className={classNames({
+                                                "card__image-back" : true,
+                                                "card-ch": true,
+                                                ["card-ch--" + (this.state.currentCharacter.name || "").toLowerCase().replace(/\s/g, "-")]: this.state.nextStep
+                                            })}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul className="card__features-container">
+                                        {this.state.currentFeatures.map((feature, key) =>{
+                                            return <li className="card__feature-element" key={key}>{feature.name}: {feature.value}</li>
+                                        })}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="card-back">
+                                <div className="card__content">
+                                        {!this.state.endGame ?
+                                            <div className="button-container">
+                                                <button className="button button--next button--auto" disabled={!this.state.allCharacters.length} onClick={()=>(this.startGame())}>Start Game</button>
+                                            </div> :
+                                            <div className="card__features-container text-center">
+                                                <h3 className="mb-2 color-3">Your points: {this.state.points}</h3>
+                                                <div className="button-container">
+                                                    <button className="button button--next button--auto" disabled={!this.state.allCharacters.length} onClick={()=>(this.startGame())}>Play Again?</button>
+                                                </div>
+                                            </div>
+                                        
+                                        }
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div className="button-container mb-2">
+                    {this.state.options.map((option, key)=>{
+                        return <button className={classNames({
+                            "button": true,
+                            "button--disabled": this.state.nextStep,
+                            "button--right": this.state.nextStep && (this.state.currentCharacter.name == option.name),
+                            "button--wrong": this.state.nextStep && this.state.playerChoice == key && !this.state.playerIsCorrect
+                        })}                    
+                        onClick={(event)=>(this.getAnswer(event))} key={key} value={option.name} data-number={key}>{option.name}</button>
+                    })}
+                    </div>
+                    {this.state.remainingCharacters.length !=0 && this.state.startGame &&
+                        <div className="button-container">
+                            <button disabled={!this.state.nextStep} className="button button--next button--auto" onClick={()=>(this.goToNextStep())}>Next Round</button>
+                        </div>
+                    }
+                    
+                    
+                        {this.state.remainingCharacters.length == 0 && this.state.playerChoice !== null || this.state.endGame &&
+                        <div className="button-container">
+                            <button className="button button--next button--auto" onClick={()=>(this.goToScore())}>See your score</button>
+                        </div>
+                        }
+            </div>
+           
+        );
+    }
+}
+   
+  
+
+
+export default App;

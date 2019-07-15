@@ -1,0 +1,59 @@
+
+
+@import '~sanitize.css';
+@import 'variables.scss';
+@import 'button.scss';
+@import 'card.scss';
+
+body{
+    background: $black;
+    color: $white;
+    @extend %font-family-opensans;
+}
+
+//container do jogo
+.game-container{
+    width: 100%;
+    padding: 0 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+//título do jogo
+.game-title{
+    text-align: center;
+    color: $white;
+    @extend %font-family-notable;
+    letter-spacing: 1em;
+    margin: 0;
+    margin-bottom: 1em;
+}
+.game-title__sw{
+    font-size: 2em;
+    color: $color-1;
+    letter-spacing: .2em;
+}
+
+/*
+
+Utilitários
+
+*/
+
+//valores de margem
+.mb-2{
+    margin-bottom: 32px;
+}
+
+//texto
+.text-center{
+    text-align: center;
+}
+
+//cores
+
+.color-3{
+    color: $color-3;
+}
