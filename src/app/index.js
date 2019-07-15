@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../scss/main.scss";
 import classNames from "classnames";
+import { shuffleArray } from "./utils"
+import { apiUrl } from "./constants";
 
 
 
@@ -18,6 +20,8 @@ class App extends Component {
             options: [],
             //caracteristicas que serão apresentadas
             currentFeatures: [],
+            //define quantas características devem aparecer
+            featuresToShow: 4,
             //pontuação
             points: 0,
             //a escolha do jogador
@@ -30,28 +34,20 @@ class App extends Component {
             endGame: false,
             //libera o início do jogo
             startGame: false
-            
         }
         this.setCharacter = this.setCharacter.bind(this);
         this.setOptions = this.setOptions.bind(this);
         this.getAnswer = this.getAnswer.bind(this);
         this.goToNextStep = this.goToNextStep.bind(this);
         this.goToScore = this.goToScore.bind(this);
-        this.shuffleArray = this.shuffleArray.bind(this)
     }
 
     //Escolhe um personagem para ser advinhado
    setCharacter(){
        // captura os personagens restantes
-        const {remainingCharacters} = this.state;
-        const featuresToShow = 4;
-        let charIndex;
-        // gera um número aleatório para para escolher novo personagem
-        do {
-            charIndex = remainingCharacters.length !== 1 ? Math.round(Math.random() * remainingCharacters.length) : 0;
-        } while (remainingCharacters[charIndex] == undefined);
+        const {remainingCharacters, featuresToShow} = this.state;
         // Escolhe o novo personagem
-        const currentCharacter = remainingCharacters[charIndex];
+        const currentCharacter = shuffleArray(remainingCharacters)[0];
         // Gera as características que podem aparecer para o jogador
         const features = [
             {
@@ -85,14 +81,14 @@ class App extends Component {
             return feature.value !== "none" && feature.value !== "n/a";
         });
         //muda a ordem das caracteristicas filtradas e retorna o número necessário
-        const shownFilters = this.shuffleArray(filteredFeatures).slice(0, featuresToShow);
+        const currentFeatures = shuffleArray(filteredFeatures).slice(0, featuresToShow);
         
         //retira o personagem selecionado dos personagens restantes
-        const newRemainingCharacters = this.state.remainingCharacters.filter((value, index) => index != charIndex );
+        const newRemainingCharacters = this.state.remainingCharacters.filter((value) => value != currentCharacter);
         
         this.setState({
             currentCharacter,
-            currentFeatures: shownFilters 
+            currentFeatures
         },() => {
             this.setOptions();
             this.setState({
@@ -105,16 +101,14 @@ class App extends Component {
        const options = [];
        const {allCharacters, currentCharacter} = this.state;
        const numberOptions = 4;
-
-       const randomUniverse = this.shuffleArray(allCharacters);
-
+       const randomUniverse = shuffleArray(allCharacters);
        options.push(currentCharacter);
        randomUniverse.forEach((randomCharacter) => {
            if(randomCharacter !== currentCharacter && options.length < numberOptions){
             options.push(randomCharacter);
            }
        });
-       const randomOptions = this.shuffleArray(options);
+       const randomOptions = shuffleArray(options);
        this.setState({
            options: randomOptions
        })
@@ -153,7 +147,7 @@ class App extends Component {
 
    //Ir para o próximo round
    goToNextStep(){
-       if(this.state.remainingCharacters.length > 0){
+       if(this.state.remainingCharacters.length != 0){
         this.setCharacter();
        }
        this.setState({
@@ -168,13 +162,9 @@ class App extends Component {
         endGame: true
     })
    }
-   shuffleArray(arr){
-    return arr.sort(() => Math.random() - 0.5);
-   }
-
     componentDidMount() {
         // obtenção de dadosatravés da api
-        fetch("https://swapi.co/api/people/?format=json", {
+        fetch(apiUrl, {
             headers: {
                 Accept: "application/json"
             }
@@ -240,8 +230,6 @@ class App extends Component {
                                             </div>
                                         
                                         }
-                                        
-                                        
                                     </div>
                                 </div>
                             </div>
