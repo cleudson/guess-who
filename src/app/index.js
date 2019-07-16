@@ -137,14 +137,16 @@ class App extends Component {
    startGame(){
        this.setState({
             startGame: true,
+            remainingCharacters: this.state.allCharacters,
             currentFeatures: [],
             points: 0,
             playerChoice: null,
             playerIsCorrect: false,
             nextStep: false,
             endGame: false,
+       }, () => {
+          this.setCharacter();
        })
-       this.setCharacter();
    }
 
    //Ir para o próximo round
@@ -180,7 +182,17 @@ class App extends Component {
        
     }
     render() {
-        
+        let scoreButton;
+        const {remainingCharacters, playerChoice, endGame} = this.state;
+        if(remainingCharacters.length == 0 && playerChoice !== null){
+            if(!endGame){
+                scoreButton = 
+                <div className="button-container">
+                    <button className="button button--next button--auto" onClick={()=>(this.goToScore())}>See your score</button>
+                </div>
+            }
+        }
+
         return (
            <div className="game-container">
                <h1 className="game-title text-center">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
@@ -213,7 +225,6 @@ class App extends Component {
                                     </div>
                                     <ul className="card__features-container">
                                         {this.state.currentFeatures.map((feature, key) =>{
-                                            // return <li className="card__feature-element" key={key}>{feature.name}: {feature.value}</li>
                                             return <Feature key={key} name={feature.name} value={feature.value}/>
                                         })}
                                     </ul>
@@ -256,12 +267,7 @@ class App extends Component {
                         </div>
                     }
                     
-                    
-                        {this.state.remainingCharacters.length == 0 && this.state.playerChoice !== null || this.state.endGame &&
-                        <div className="button-container">
-                            <button className="button button--next button--auto" onClick={()=>(this.goToScore())}>See your score</button>
-                        </div>
-                        }
+                    {scoreButton}
             </div>
            
         );
