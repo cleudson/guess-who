@@ -11,6 +11,7 @@ import classNames from "classnames";
 
 function Card(props) {
   const {state, actions} = props;
+  const buttonMessage = !state.endGame ? "Start Game" : "Play Again?";
   return (
     <div className="card">
         <div className={classNames({
@@ -43,18 +44,9 @@ function Card(props) {
             </div>
             <div className="card-back">
                 <div className="card__content">
-                    {!state.endGame ?
-                        <div className="button-container">
-                            <Button className="button button--next button--auto" disabled={!state.allCharacters.length} onClick={()=>(actions.startGame())} text="Start Game">Start Game</Button>
-                        </div> :
-                        <div className="card__features-container text-center">
-                            <h3 className="mb-2 color-3">Your points: {state.points}</h3>
-                            <div className="button-container">
-                                <Button className="button button--next button--auto" disabled={!state.allCharacters.length} onClick={()=>(actions.startGame())}>Play Again?</Button>
-                            </div>
-                        </div>
-                    
-                    }
+                    <div className="button-container">
+                        <Button className="button button--next button--auto" disabled={!state.allCharacters.length} onClick={()=>(actions.startGame())} >{buttonMessage}</Button>
+                    </div>
                 </div>
             </div>
         </div>

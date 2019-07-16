@@ -184,14 +184,28 @@ class App extends Component {
             goToScore: this.goToScore.bind(this),
             goToNextStep: this.goToNextStep.bind(this),
             getAnswer: this.getAnswer.bind(this)
+        };
+        const gameStatus = () => {
+            if(state.allCharacters.length){
+                if(state.startGame){
+                    if(state.endGame){
+                        return `Your score: ${state.points}/${state.allCharacters.length}`;
+                    }
+                    return `Round: ${state.allCharacters.length - state.remainingCharacters.length}/${state.allCharacters.length}`;
+                }
+                else{
+                    return "May the score be with you!"
+                }
+            }
+            else{
+                return "Loading characters..."
+            }
         }
+ 
         return (
            <div className="game-container">
                <h1 className="game-title text-center">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
-                {!state.allCharacters.length ?
-                    <h2 className="text-center">Loading characters...</h2> : 
-                    <h2 className="text-center">Round: {state.allCharacters.length - state.remainingCharacters.length}/{state.allCharacters.length}</h2>
-                }
+                <h2 className="text-center">{gameStatus()}</h2>
                 <Card state={state} actions={actions}/>
                 <Painel state={state} actions={actions}/>
             </div>
