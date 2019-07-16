@@ -48,6 +48,9 @@ Botões
             transform: translateX(#{-$base-number/2}) skewX(15deg);
         }
     }
+    &:disabled{
+        
+    }
 }
 
 //botao desabilitado
@@ -58,6 +61,7 @@ Botões
 
 // botao com resposta errada
 .button--wrong::before{
+    transition-delay: 1s;
     background-color: $color-4; 
 }
 //botao com resposta certa
@@ -65,6 +69,7 @@ Botões
     z-index: 1;
     transform: scale(1.1);
     &::before{
+        transition-delay: 1s;    
         background-color: $color-1;
     }
 }
