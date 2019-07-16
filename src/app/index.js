@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import "../scss/main.scss";
-import classNames from "classnames";
 import { shuffleArray } from "./utils"
 import { apiUrl, optionsToShow, featuresToShow } from "./constants";
-import Button from "./components/button";
 import Card from "./components/card"
+import Painel from "./components/painel";
  
 
 
@@ -39,17 +38,12 @@ class App extends Component {
             //libera o início do jogo
             startGame: false
         }
-        this.setCharacter = this.setCharacter.bind(this);
-        this.setOptions = this.setOptions.bind(this);
-        this.getAnswer = this.getAnswer.bind(this);
-        this.goToNextStep = this.goToNextStep.bind(this);
-        this.goToScore = this.goToScore.bind(this);
     }
 
     //Escolhe um personagem para ser advinhado
    setCharacter(){
        // captura os personagens restantes
-        const {remainingCharacters, featuresToShow} = this.state;
+        const { remainingCharacters, featuresToShow } = this.state;
         // Escolhe o novo personagem
         const currentCharacter = shuffleArray(remainingCharacters)[0];
         // Gera as características que podem aparecer para o jogador
@@ -104,13 +98,17 @@ class App extends Component {
    setOptions(){
        const options = [];
        const {allCharacters, currentCharacter, optionsToShow} = this.state;
+       //randomiza os personagens
        const randomUniverse = shuffleArray(allCharacters);
+       // inclui o personagem escolhido
        options.push(currentCharacter);
+       // inclui o restante de personagens com base no número de opções
        randomUniverse.forEach((randomCharacter) => {
            if(randomCharacter !== currentCharacter && options.length < optionsToShow){
             options.push(randomCharacter);
            }
        });
+       //randomiza as opções
        const randomOptions = shuffleArray(options);
        this.setState({
            options: randomOptions
@@ -120,10 +118,6 @@ class App extends Component {
    getAnswer(event){
         const {value} = event.target;
         const optionNumber = event.target.dataset.number;
-        
-        this.setState({
-            playerChoice: optionNumber
-        })
         if(value === this.state.currentCharacter.name){
             this.setState({
                 points: this.state.points + 1,
@@ -131,6 +125,7 @@ class App extends Component {
             })
         }
         this.setState({
+            playerChoice: optionNumber,
             nextStep: true
         })
    }
@@ -168,7 +163,7 @@ class App extends Component {
     })
    }
     componentDidMount() {
-        // obtenção de dadosatravés da api
+        // obtenção de dados através da api
         fetch(apiUrl, {
             headers: {
                 Accept: "application/json"
@@ -183,44 +178,22 @@ class App extends Component {
        
     }
     render() {
-        let scoreButton;
-        const {remainingCharacters, playerChoice, endGame} = this.state;
-        if(remainingCharacters.length == 0 && playerChoice !== null){
-            if(!endGame){
-                scoreButton = 
-                <div className="button-container">
-                    <Button className="button button--next button--auto" onClick={()=>(this.goToScore())}>See your score</Button>   
-                </div>
-            }
+        const state = this.state;
+        const actions = {
+            startGame: this.startGame.bind(this),
+            goToScore: this.goToScore.bind(this),
+            goToNextStep: this.goToNextStep.bind(this),
+            getAnswer: this.getAnswer.bind(this)
         }
         return (
            <div className="game-container">
                <h1 className="game-title text-center">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
-                
-                {!this.state.allCharacters.length ?
+                {!state.allCharacters.length ?
                     <h2 className="text-center">Loading characters...</h2> : 
-                    <h2 className="text-center">Round: {this.state.allCharacters.length - this.state.remainingCharacters.length}/{this.state.allCharacters.length}</h2>
+                    <h2 className="text-center">Round: {state.allCharacters.length - state.remainingCharacters.length}/{state.allCharacters.length}</h2>
                 }
-                <Card state={this.state} actions={{startGame: this.startGame.bind(this)}}/>
-                    
-                
-                <div className="button-container mb-2">
-                {this.state.options.map((option, key)=>{
-                    return <Button className={classNames({
-                        "button": true,
-                        "button--disabled": this.state.nextStep,
-                        "button--right": this.state.nextStep && (this.state.currentCharacter.name == option.name),
-                        "button--wrong": this.state.nextStep && this.state.playerChoice == key && !this.state.playerIsCorrect
-                    })}                    
-                    onClick={(event)=>(this.getAnswer(event))} key={key} value={option.name} data-number={key} disabled={this.state.nextStep}>{option.name}</Button>
-                })}
-                </div>
-                {this.state.remainingCharacters.length !=0 && this.state.startGame &&
-                    <div className="button-container">
-                        <Button disabled={!this.state.nextStep} className="button button--next button--auto" onClick={()=>(this.goToNextStep())}>Next Round</Button>
-                    </div>
-                }    
-                {scoreButton}
+                <Card state={state} actions={actions}/>
+                <Painel state={state} actions={actions}/>
             </div>
            
         );
