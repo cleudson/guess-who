@@ -178,13 +178,14 @@ class App extends Component {
        
     }
     render() {
-        const state = this.state;
+        const {state} = this;
         const actions = {
             startGame: this.startGame.bind(this),
             goToScore: this.goToScore.bind(this),
             goToNextStep: this.goToNextStep.bind(this),
             getAnswer: this.getAnswer.bind(this)
         };
+        const gameProps = {state, actions};
         const gameStatus = () => {
             if(state.allCharacters.length){
                 if(state.startGame){
@@ -206,8 +207,8 @@ class App extends Component {
            <div className="game-container">
                <h1 className="game-title text-center">Gues<span className="game-title__sw">s</span> <span className="game-title__sw">W</span>ho?</h1>
                 <h2 className="text-center">{gameStatus()}</h2>
-                <Card state={state} actions={actions}/>
-                <Painel state={state} actions={actions}/>
+                <Card {...gameProps}/>
+                <Painel {...gameProps}/>
             </div>
            
         );
