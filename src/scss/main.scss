@@ -35,6 +35,15 @@ body{
     letter-spacing: .2em;
 }
 
+// painel de botões
+.panel{
+    transition: opacity 1s linear;
+}
+.panel--hidden{
+    opacity: 0;
+    pointer-events: none;
+}
+
 /*
 
 Utilitários

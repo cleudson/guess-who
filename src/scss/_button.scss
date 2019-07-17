@@ -19,7 +19,7 @@ Botões
     text-transform: uppercase;
     flex: 1;
     transform-origin: center;
-    transition: transform .25s ease-out;
+    transition: transform .25s ease-out, opacity .25s linear;
     color: $black;
     &::before, &::after{
         content: '';
@@ -47,9 +47,6 @@ Botões
             background-color: $color-5;
             transform: translateX(#{-$base-number/2}) skewX(15deg);
         }
-    }
-    &:disabled{
-        
     }
 }
 

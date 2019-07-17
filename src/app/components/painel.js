@@ -12,7 +12,10 @@ function Painel(props) {
     const {state, actions} = props;
     const disabled = (state.endGame || !state.startGame);
     return (
-      <div style={disabled ? {opacity: 0.5, pointerEvents: "none"} : null}>
+      <div className={classNames({
+          "panel": true,
+          "panel--hidden": disabled
+      })}>
         <div className="button-container mb-2">
             {state.options.map((option, key)=>{
                 return <Button className={classNames({

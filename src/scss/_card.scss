@@ -70,6 +70,7 @@ Carta
     @extend %flex-column-center;
     @extend %background-card;
     padding: $base-number;
+    border-radius: $base-number;
 }
 
 
