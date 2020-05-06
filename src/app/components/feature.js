@@ -1,9 +1,3 @@
-/*
- 
-Feature
-
-*/
-
 import React from 'react';
 
 function Feature(props) {

@@ -11,42 +11,24 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            // grupo de personagens
-            allCharacters: [],
-            //personagem atual
-            currentCharacter: {},
-            //personagens que restam a serem advinhados
-            remainingCharacters: [],
-            //opções de personagens que serão mostradas na tela
-            options: [],
-            //quants opções se deve mostrar
-            optionsToShow,
-            //caracteristicas que serão apresentadas
-            currentFeatures: [],
-            //define quantas características devem aparecer
-            featuresToShow,
-            //pontuação
-            points: 0,
-            //a escolha do jogador
-            playerChoice: null,
-            //se o jogador acertou a resposta
-            playerIsCorrect: false,
-            //verifica se o usuário acertou a resposta
-            nextStep: false,
-            //libera fim do jogo
-            endGame: false,
-            //libera o início do jogo
-            startGame: false
+          allCharacters: [],
+          currentCharacter: {},
+          remainingCharacters: [],
+          options: [],
+          optionsToShow,
+          currentFeatures: [],
+          featuresToShow,
+          points: 0,
+          playerChoice: null,
+          playerIsCorrect: false,
+          nextStep: false,
+          endGame: false,
+          startGame: false
         }
     }
-
-    //Escolhe um personagem para ser advinhado
    setCharacter(){
-       // captura os personagens restantes
         const { remainingCharacters, featuresToShow } = this.state;
-        // Escolhe o novo personagem
         const currentCharacter = shuffleArray(remainingCharacters)[0];
-        // Gera as características que podem aparecer para o jogador
         const features = [
             {
                 name:"Birth Year",
@@ -74,16 +56,11 @@ class App extends Component {
             }
             
         ];
-        // filtra as características
         const filteredFeatures = features.filter((feature) => {
             return feature.value !== "none" && feature.value !== "n/a";
         });
-        //muda a ordem das caracteristicas filtradas e retorna o número necessário
         const currentFeatures = shuffleArray(filteredFeatures).slice(0, featuresToShow);
-        
-        //retira o personagem selecionado dos personagens restantes
         const newRemainingCharacters = this.state.remainingCharacters.filter((value) => value != currentCharacter);
-        
         this.setState({
             currentCharacter,
             currentFeatures
@@ -94,27 +71,22 @@ class App extends Component {
             })
         })
    }
-   // Escolhe outros personagens para entrar na pergunta
    setOptions(){
-       const options = [];
-       const {allCharacters, currentCharacter, optionsToShow} = this.state;
-       //randomiza os personagens
-       const randomUniverse = shuffleArray(allCharacters);
-       // inclui o personagem escolhido
-       options.push(currentCharacter);
-       // inclui o restante de personagens com base no número de opções
-       randomUniverse.forEach((randomCharacter) => {
-           if(randomCharacter !== currentCharacter && options.length < optionsToShow){
-            options.push(randomCharacter);
-           }
-       });
-       //randomiza as opções
-       const randomOptions = shuffleArray(options);
-       this.setState({
-           options: randomOptions
-       })
-   }
-   // Respondendo a pergunta
+        const options = [];
+        const {allCharacters, currentCharacter, optionsToShow} = this.state;
+        const randomUniverse = shuffleArray(allCharacters);
+        options.push(currentCharacter);
+        randomUniverse.forEach((randomCharacter) => {
+                if(randomCharacter !== currentCharacter && options.length < optionsToShow){
+                    options.push(randomCharacter);
+                }
+            });
+        const randomOptions = shuffleArray(options);
+            this.setState({
+                options: randomOptions
+        })
+    }
+   
    getAnswer(event){
         const {value} = event.target;
         const optionNumber = event.target.dataset.number;
@@ -129,7 +101,7 @@ class App extends Component {
             nextStep: true
         })
    }
-   //Inicializando  o jogo
+   
    startGame(){
        this.setState({
             startGame: true,
@@ -145,7 +117,7 @@ class App extends Component {
        })
    }
 
-   //Ir para o próximo round
+   
    goToNextStep(){
        if(this.state.remainingCharacters.length != 0){
         this.setCharacter();
@@ -156,15 +128,14 @@ class App extends Component {
         playerIsCorrect: false
         })
    }
-   // Finaliza o jogo
+   
    goToScore(){
     this.setState({
         endGame: true
     })
    }
     componentDidMount() {
-        // obtenção de dados através da api
-        fetch(apiUrl, {
+  fetch(apiUrl, {
             headers: {
                 Accept: "application/json"
             }
@@ -210,8 +181,7 @@ class App extends Component {
                 <Card {...gameProps}/>
                 <Painel {...gameProps}/>
             </div>
-           
-        );
+     );
     }
 }
    

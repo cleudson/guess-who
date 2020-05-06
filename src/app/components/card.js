@@ -1,9 +1,3 @@
-/*
- 
-Card
-
-*/
-
 import React from 'react';
 import Feature from "./feature";
 import Button from "./button";
